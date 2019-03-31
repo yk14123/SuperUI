@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.chinafocus.myui.bean.Person;
 import com.chinafocus.myui.global.Constants;
@@ -35,19 +36,23 @@ public class MainActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        // 2.需要判断手机厂商，
+        // 华为 小米 OPPO 等
 
-        getWindow().getDecorView().setOnApplyWindowInsetsListener( new View.OnApplyWindowInsetsListener() {
+
+
+        getWindow().getDecorView().setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
             @SuppressLint("NewApi")
             @Override
             public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
 
-                Log.e("===>>>" ,"setOnApplyWindowInsetsListener");
+                Log.e("===>>>", "setOnApplyWindowInsetsListener");
                 // 用这里的View判断刘海状态，这个回调会在onCreate之后执行！
-                // 再做流海屏适配的时候，需要判断手机，是不是刘海
+                // 3.再做流海屏适配的时候，需要判断手机，是不是有刘海！！
                 boolean hasDisplayCutout = hasDisplayCutout(window);
-                Log.e("===>>>" , "hasDisplayCutout -->"+hasDisplayCutout);
-                if (hasDisplayCutout){
-                    // 2.允许--内容区延伸到刘海区
+                Log.e("===>>>", "hasDisplayCutout -->" + hasDisplayCutout);
+                if (hasDisplayCutout) {
+                    // 4.允许--内容区延伸到刘海区
                     WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
 
                     /**
@@ -73,13 +78,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setContentView(R.layout.activity_liuhai_main);
-        Log.e("===>>>" ,"setContentView");
+        Log.e("===>>>", "setContentView");
 //        MyEventBus.getDefault().register(this);
+
+        Log.e("===>>>", "状态栏高度是：" + heightForDisplayCutout());
+
+        /**
+         *  5.是否考虑，适配刘海屏幕后，调整控件位置，
+         */
+
+//        Button button = findViewById(R.id.bt_home);
+//        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) button.getLayoutParams();
+//        layoutParams.topMargin += heightForDisplayCutout();
+//        button.setLayoutParams(layoutParams);
+
+        /**
+         * 使用父容器的setPadding，或者修改子View的LayoutParams，来达到移动View的效果
+         */
+        RelativeLayout relativeLayout = findViewById(R.id.rl_home);
+        relativeLayout.setPadding(relativeLayout.getPaddingLeft(), relativeLayout.getPaddingTop() + heightForDisplayCutout(),
+                relativeLayout.getPaddingRight(), relativeLayout.getPaddingBottom());
 
     }
 
     /**
      * 判断是否有流海屏
+     *
      * @return
      */
     @TargetApi(Build.VERSION_CODES.P)
@@ -94,6 +118,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    /**
+     * 取状态栏高度，大多数情况下，状态栏高度和刘海的高度是一样的
+     * //iqoo默认的是 状态栏高度是：84
+     *
+     * @return
+     */
+    public int heightForDisplayCutout() {
+        int resID = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resID > 0) {
+            return getResources().getDimensionPixelSize(resID);
+        }
+        return 0;
     }
 
 
