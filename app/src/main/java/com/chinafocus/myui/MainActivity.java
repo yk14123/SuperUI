@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 
 import com.chinafocus.myui.bean.Person;
 import com.chinafocus.myui.global.Constants;
@@ -37,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // 2.需要判断手机厂商，
-        // 华为 小米 OPPO 等
-
+        // 华为 小米 OPPO 等,
 
 
         getWindow().getDecorView().setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
@@ -95,14 +93,14 @@ public class MainActivity extends AppCompatActivity {
         /**
          * 使用父容器的setPadding，或者修改子View的LayoutParams，来达到移动View的效果
          */
-        RelativeLayout relativeLayout = findViewById(R.id.rl_home);
-        relativeLayout.setPadding(relativeLayout.getPaddingLeft(), relativeLayout.getPaddingTop() + heightForDisplayCutout(),
-                relativeLayout.getPaddingRight(), relativeLayout.getPaddingBottom());
+//        RelativeLayout relativeLayout = findViewById(R.id.rl_home);
+//        relativeLayout.setPadding(relativeLayout.getPaddingLeft(), relativeLayout.getPaddingTop() + heightForDisplayCutout(),
+//                relativeLayout.getPaddingRight(), relativeLayout.getPaddingBottom());
 
     }
 
     /**
-     * 判断是否有流海屏
+     * 判断是否有流海屏,适用vivo
      *
      * @return
      */
@@ -118,6 +116,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+
+    /**
+     * 判断是否有流海屏，始用oppo
+     * @return
+     */
+    private boolean hasDisplayCutoutFromOPPO() {
+        return getPackageManager().hasSystemFeature("com.oppo.feature.screen.heteromorphism");
     }
 
     /**
