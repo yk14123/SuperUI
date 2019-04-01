@@ -18,6 +18,7 @@ import com.chinafocus.myui.global.Constants;
 import com.chinafocus.myui.module.MyEventBus;
 import com.chinafocus.myui.module.MyThread;
 import com.chinafocus.myui.module.annotation.MyBus;
+import com.chinafocus.myui.widget.GradientLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setContentView(R.layout.activity_liuhai_main);
+//        setContentView(R.layout.activity_liuhai_main);
+        setContentView(new GradientLayout(this));
         Log.e("===>>>", "setContentView");
 //        MyEventBus.getDefault().register(this);
 
