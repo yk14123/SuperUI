@@ -94,8 +94,10 @@ public class Xfermodes extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(new SampleView(this));
-        setContentView(new XfermodesView(this));
+        setContentView(new SampleView(this));
+//        setContentView(new XfermodesView(this));
+//        setContentView(new LogoLoadingView(this));
+//        setContentView(new CircleImageView(this));
     }
 
     private static class XfermodesView extends View {
@@ -144,7 +146,7 @@ public class Xfermodes extends Activity {
 
             // 先绘制的是Dst，后绘制的是Src
             canvas.drawBitmap(createRectBitmap(mWidth, mHeight), 0, 0, mPaint);//天蓝色
-            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
             canvas.drawBitmap(createCircleBitmap(mWidth, mHeight), 0, 0, mPaint);//黄色
             mPaint.setXfermode(null);
 
@@ -166,25 +168,32 @@ public class Xfermodes extends Activity {
                 new PorterDuffXfermode(PorterDuff.Mode.SRC),
                 new PorterDuffXfermode(PorterDuff.Mode.DST),
                 new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER),
+
                 new PorterDuffXfermode(PorterDuff.Mode.DST_OVER),
                 new PorterDuffXfermode(PorterDuff.Mode.SRC_IN),
                 new PorterDuffXfermode(PorterDuff.Mode.DST_IN),
                 new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT),
+
                 new PorterDuffXfermode(PorterDuff.Mode.DST_OUT),
                 new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP),
                 new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP),
                 new PorterDuffXfermode(PorterDuff.Mode.XOR),
+
                 new PorterDuffXfermode(PorterDuff.Mode.DARKEN),
                 new PorterDuffXfermode(PorterDuff.Mode.LIGHTEN),
                 new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY),
-                new PorterDuffXfermode(PorterDuff.Mode.SCREEN)
+                new PorterDuffXfermode(PorterDuff.Mode.SCREEN),
+
+                new PorterDuffXfermode(PorterDuff.Mode.ADD),
+                new PorterDuffXfermode(PorterDuff.Mode.OVERLAY)
         };
 
         private static final String[] sLabels = {
                 "Clear", "Src", "Dst", "SrcOver",
                 "DstOver", "SrcIn", "DstIn", "SrcOut",
                 "DstOut", "SrcATop", "DstATop", "Xor",
-                "Darken", "Lighten", "Multiply", "Screen"
+                "Darken", "Lighten", "Multiply", "Screen",
+                "Add","OverLay"
         };
 
         public SampleView(Context context) {
@@ -220,6 +229,7 @@ public class Xfermodes extends Activity {
             int x = 0;
             int y = 0;
             for (int i = 0; i < sModes.length; i++) {
+
                 // draw the border
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setShader(null);
@@ -241,6 +251,7 @@ public class Xfermodes extends Activity {
                         Canvas.ALL_SAVE_FLAG);
 
                 canvas.translate(x, y);
+//                canvas.drawColor(Color.RED);
                 canvas.drawBitmap(mDstB, 0, 0, paint);
                 paint.setXfermode(sModes[i]);
                 canvas.drawBitmap(mSrcB, 0, 0, paint);
