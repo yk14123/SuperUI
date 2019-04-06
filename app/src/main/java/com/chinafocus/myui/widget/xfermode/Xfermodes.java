@@ -36,16 +36,6 @@ import android.view.View;
 
 public class Xfermodes extends Activity {
 
-    // create a bitmap with a circle, used for the "dst" image
-    static Bitmap makeDst(int w, int h) {
-        Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(bm);
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-        p.setColor(0xFFFFCC44);
-        c.drawOval(new RectF(0, 0, w * 3 / 4, h * 3 / 4), p);
-        return bm;
-    }
 
     /**
      * 画矩形DstBitmap
@@ -81,8 +71,19 @@ public class Xfermodes extends Activity {
         return bitmap;
     }
 
+    // create a bitmap with a circle, used for the "dst" image
+    static Bitmap makeDst(int w, int h) {
+        Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bm);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        p.setColor(0xFFFFCC44);
+        c.drawOval(new RectF(0, 0, w * 3 / 4, h * 3 / 4), p);
+        return bm;
+    }
+
     // create a bitmap with a rect, used for the "src" image
-    static Bitmap makeSrc(int w, int h) {
+        static Bitmap makeSrc(int w, int h) {
         Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bm);
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -107,11 +108,11 @@ public class Xfermodes extends Activity {
         private int mHeight;
 
         public XfermodesView(Context context) {
-            this(context,null);
+            this(context, null);
         }
 
         public XfermodesView(Context context, AttributeSet attrs) {
-            this(context, attrs,0);
+            this(context, attrs, 0);
         }
 
         public XfermodesView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -139,7 +140,7 @@ public class Xfermodes extends Activity {
             // 禁止硬件加速
             setLayerType(LAYER_TYPE_SOFTWARE, null);
 
-            setBackgroundColor(Color.GRAY);
+//            setBackgroundColor(Color.GRAY);
 
             // 离屏绘制
             int layerId = canvas.saveLayer(0, 0, mWidth, mHeight, mPaint, Canvas.ALL_SAVE_FLAG);
@@ -193,7 +194,7 @@ public class Xfermodes extends Activity {
                 "DstOver", "SrcIn", "DstIn", "SrcOut",
                 "DstOut", "SrcATop", "DstATop", "Xor",
                 "Darken", "Lighten", "Multiply", "Screen",
-                "Add","OverLay"
+                "Add", "OverLay"
         };
 
         public SampleView(Context context) {
@@ -252,9 +253,11 @@ public class Xfermodes extends Activity {
 
                 canvas.translate(x, y);
 //                canvas.drawColor(Color.RED);
-                canvas.drawBitmap(mDstB, 0, 0, paint);
+//                canvas.drawBitmap(mDstB, 0, 0, paint);
+                canvas.drawBitmap(createDstBitmap(2 * W / 3, 2 * H / 3), 0, 0, paint);
                 paint.setXfermode(sModes[i]);
-                canvas.drawBitmap(mSrcB, 0, 0, paint);
+//                canvas.drawBitmap(mSrcB, 0, 0, paint);
+                canvas.drawBitmap(createSrcRect(2 * W / 3, 2 * H / 3), W / 3, H / 3, paint);
                 paint.setXfermode(null);
                 canvas.restoreToCount(sc);
 
@@ -271,6 +274,40 @@ public class Xfermodes extends Activity {
                 }
             }
         }
+    }
+
+    /**
+     * 画矩形DstBitmap
+     *
+     * @param w
+     * @param h
+     * @return
+     */
+    static Bitmap createSrcRect(int w, int h) {
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint dstPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        dstPaint.setColor(0xFF66AAFF);//天蓝色
+        canvas.drawRect(new Rect(0, 0, w, h), dstPaint);
+
+        return bitmap;
+    }
+
+    /**
+     * 画圆形SrcBitmap
+     *
+     * @param w
+     * @param h
+     * @return
+     */
+    static Bitmap createDstBitmap(int w, int h) {
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint srcPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        srcPaint.setColor(0xFFFFCC44);//黄色
+        canvas.drawCircle(w / 2, h / 2, h / 2, srcPaint);
+
+        return bitmap;
     }
 }
 
