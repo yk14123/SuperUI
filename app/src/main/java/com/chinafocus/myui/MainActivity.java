@@ -164,4 +164,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         MyEventBus.getDefault().unRegister(this);
     }
+
 }

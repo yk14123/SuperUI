@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#999999"
+    tools:context=".MainActivity">
+
+
+    <Button
+        android:onClick="resetDragBubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:text="重置"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:ignore="OnClick"/>
+
+    <com.chinafocus.myui.widget.canvas.bezier.DragBubbleView
+        android:id="@+id/dbv_drag_bubble_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        app:bubble_color="@color/blue"
+        app:bubble_radius="16dp"
+        app:bubble_text="3"
+        app:bubble_textColor="#fff"
+        app:bubble_textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <!--<attr name="bubble_radius" format="dimension"/>-->
+    <!--<attr name="bubble_color" format="color"/>-->
+    <!--<attr name="bubble_text" format="string"/>-->
+    <!--<attr name="bubble_textSize" format="dimension"/>-->
+    <!--<attr name="bubble_textColor" format="color"/>-->
+
+
+</android.support.constraint.ConstraintLayout>
