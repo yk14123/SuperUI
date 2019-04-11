@@ -126,7 +126,6 @@ public class PathMeasureView extends View {
         pathMeasure.getMatrix(pathMeasure.getLength() * mFloat, mMatrix, PathMeasure.POSITION_MATRIX_FLAG | PathMeasure.TANGENT_MATRIX_FLAG);
         //将图片的旋转坐标调整到图片中心位置
         mMatrix.preTranslate(-mBitmap.getWidth() / 2, -mBitmap.getHeight() / 2);
-
         canvas.drawBitmap(mBitmap,mMatrix, mPaint);
 
         invalidate();

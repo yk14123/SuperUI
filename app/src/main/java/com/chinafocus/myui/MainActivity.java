@@ -28,23 +28,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // 需在setContentView之前调用
 //        DensityUtils.setDensity(getApplication(),this);
-
 //        setContentView(R.layout.activity_main);
-
         // 1.因为流海屏适配，只有发生在全屏！设置全屏，需在setContentView之前调用
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         // 2.需要判断手机厂商，
         // 华为 小米 OPPO 等,
-
-
         getWindow().getDecorView().setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
             @SuppressLint("NewApi")
             @Override
             public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
-
                 Log.e("===>>>", "setOnApplyWindowInsetsListener");
                 // 用这里的View判断刘海状态，这个回调会在onCreate之后执行！
                 // 3.再做流海屏适配的时候，需要判断手机，是不是有刘海！！
@@ -69,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
                     systemUiVisibility |= flags;// 追加沉浸式设置
                     window.getDecorView().setSystemUiVisibility(systemUiVisibility);
                 }
-
-
                 getWindow().getDecorView().setOnApplyWindowInsetsListener(null);
                 return v.onApplyWindowInsets(insets);
             }
