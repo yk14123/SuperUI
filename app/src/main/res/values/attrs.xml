@@ -16,4 +16,8 @@
         <attr name="bubble_textSize" format="dimension"/>
         <attr name="bubble_textColor" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="Happy_Layout">
+        <attr name="happy_test" format="string"/>
+    </declare-styleable>
 </resources>
