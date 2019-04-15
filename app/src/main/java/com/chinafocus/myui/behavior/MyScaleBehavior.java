@@ -151,6 +151,7 @@ public class MyScaleBehavior<V extends View> extends CoordinatorLayout.Behavior<
 //            isOverConsumed = false;
 //        }
 
+
         ViewPropertyAnimatorCompat viewPropertyAnimatorCompat = ViewCompat.animate(child).scaleX(1).setListener(new ViewPropertyAnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(View view) {

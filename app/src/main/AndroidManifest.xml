@@ -88,8 +88,15 @@
             <!--</intent-filter>-->
         </activity>
         <activity android:name=".behavior.BehaviorActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--&lt;!&ndash;<category android:name="android.intent.category.SAMPLE_CODE" />&ndash;&gt;-->
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity android:name=".widget.chinasvg.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
                 <!--<category android:name="android.intent.category.SAMPLE_CODE" />-->
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
