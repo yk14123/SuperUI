@@ -1,5 +1,6 @@
 package com.chinafocus.myui.widget.taobao;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,11 +16,15 @@ import android.widget.Toast;
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
+import com.alibaba.android.vlayout.layout.FixLayoutHelper;
+import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 import com.alibaba.android.vlayout.layout.ScrollFixLayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
+import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
+import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
 import com.bumptech.glide.Glide;
 import com.chinafocus.myui.R;
 import com.sunfusheng.marqueeview.MarqueeView;
@@ -31,6 +37,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_taobao);
         initView();
-        initTime();
+//        initTime();
     }
 
     private void initTime() {
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             ZonedDateTime zonedDateTime = ZonedDateTime.now();
-            ZonedDateTime zonedDateTimeBefore = ZonedDateTime.now().minus(1,ChronoUnit.DAYS);
+            ZonedDateTime zonedDateTimeBefore = ZonedDateTime.now().minus(1, ChronoUnit.DAYS);
 
 
             Log.e("between-Time", "zonedDateTime = " + zonedDateTime);
@@ -89,9 +96,165 @@ public class MainActivity extends AppCompatActivity {
 //        viewPool.setMaxRecycledViews(3, 1);
 //        viewPool.setMaxRecycledViews(4, 4);
 
+        List<DelegateAdapter.Adapter> adapterLists = new LinkedList<>();
+
+        /**
+         设置吸边布局
+         */
+        StickyLayoutHelper stickyLayoutHelper = new StickyLayoutHelper();
+
+        // 公共属性
+//        stickyLayoutHelper.setItemCount(1);// 设置布局里Item个数
+        stickyLayoutHelper.setPadding(20, 20, 20, 20);// 设置LayoutHelper的子元素相对LayoutHelper边缘的距离
+//        stickyLayoutHelper.setMargin(20, 20, 20, 20);// 设置LayoutHelper边缘相对父控件（即RecyclerView）的距离
+        //这个Margin设置了会卡
+        stickyLayoutHelper.setBgColor(Color.GRAY);// 设置背景颜色
+        stickyLayoutHelper.setAspectRatio(3);// 设置设置布局内每行布局的宽与高的比
+
+        // 特有属性
+        stickyLayoutHelper.setStickyStart(true);
+        // true = 组件吸在顶部
+        // false = 组件吸在底部
+
+        stickyLayoutHelper.setOffset(100);// 设置吸边位置的偏移量
+
+        BaseDelegateAdapter stickyAdapter = new BaseDelegateAdapter(this,stickyLayoutHelper,R.layout.vlayout_grid,1,10){
+
+            @Override
+            public void onBindViewHolder(@NonNull BaseViewHolder baseViewHolder, int position) {
+                if (position == 0){
+                    int item = GRID_URL[0];
+                    ImageView iv = baseViewHolder.getView(R.id.iv);
+                    Glide.with(getApplicationContext()).load(item).into(iv);
+
+                    iv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(getApplicationContext(), "item" + position, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        };
+
+
+        /**
+         设置可选固定布局
+         */
+
+        ScrollFixLayoutHelper scrollFixLayoutHelper = new ScrollFixLayoutHelper(ScrollFixLayoutHelper.TOP_RIGHT,0,0);
+        // 参数说明:
+        // 参数1:设置吸边时的基准位置(alignType) - 有四个取值:TOP_LEFT(默认), TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
+        // 参数2:基准位置的偏移量x
+        // 参数3:基准位置的偏移量y
+
+
+
+        // 公共属性
+        scrollFixLayoutHelper.setItemCount(1);// 设置布局里Item个数
+        // 从设置Item数目的源码可以看出，一个FixLayoutHelper只能设置一个
+//        @Override
+//        public void setItemCount(int itemCount) {
+//            if (itemCount > 0) {
+//                super.setItemCount(1);
+//            } else {
+//                super.setItemCount(0);
+//            }
+//        }
+        scrollFixLayoutHelper.setPadding(20, 20, 20, 20);// 设置LayoutHelper的子元素相对LayoutHelper边缘的距离
+        scrollFixLayoutHelper.setMargin(20, 20, 20, 20);// 设置LayoutHelper边缘相对父控件（即RecyclerView）的距离
+        scrollFixLayoutHelper.setBgColor(Color.GRAY);// 设置背景颜色
+        scrollFixLayoutHelper.setAspectRatio(6);// 设置设置布局内每行布局的宽与高的比
+
+        // fixLayoutHelper特有属性
+        scrollFixLayoutHelper.setAlignType(FixLayoutHelper.BOTTOM_RIGHT);// 设置吸边时的基准位置(alignType)
+        scrollFixLayoutHelper.setX(30);// 设置基准位置的横向偏移量X
+        scrollFixLayoutHelper.setY(50);// 设置基准位置的纵向偏移量Y
+        scrollFixLayoutHelper.setShowType(ScrollFixLayoutHelper.SHOW_ON_LEAVE);// 设置Item的显示模式
+
+        // scrollFixLayoutAdapter的位置！决定了scroll展示的时机
+        // 原理就是，在scrollFixLayoutAdapter的布局位置，插入了一个隐藏的不可见View，当不可见View，滑出去的时候，scroll展示！
+        BaseDelegateAdapter scrollFixLayoutAdapter  = new BaseDelegateAdapter(this, scrollFixLayoutHelper,R.layout.vlayout_fixlayout_item, 1,11) {
+            // 设置需要展示的数据总数,此处设置是1
+            // 为了展示效果,通过重写onBindViewHolder()将布局的第一个数据设置为scrollFix
+            @Override
+            public void onBindViewHolder(BaseViewHolder holder, int position) {
+                if (position == 0 ){
+
+                    int item = GRID_URL[0];
+                    ImageView iv = holder.getView(R.id.Image);
+                    Glide.with(getApplicationContext()).load(item).into(iv);
+
+                    iv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(getApplicationContext(), "item" + position, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    holder.setText(R.id.Item,"这是scroll滚动的Layout");
+                }
+            }
+        };
+
+        /**
+         设置浮动布局
+         */
+        FloatLayoutHelper floatLayoutHelper = new FloatLayoutHelper();
+        // 创建FloatLayoutHelper对象
+
+        // 公共属性
+        floatLayoutHelper.setItemCount(1);// 设置布局里Item个数
+        // 从设置Item数目的源码可以看出，一个FixLayoutHelper只能设置一个
+//        @Override
+//        public void setItemCount(int itemCount) {
+//            if (itemCount > 0) {
+//                super.setItemCount(1);
+//            } else {
+//                super.setItemCount(0);
+//            }
+//        }
+        floatLayoutHelper.setAlignType(FixLayoutHelper.TOP_RIGHT);
+        floatLayoutHelper.setPadding(20, 20, 20, 20);// 设置LayoutHelper的子元素相对LayoutHelper边缘的距离
+        floatLayoutHelper.setMargin(20, 20, 20, 20);// 设置LayoutHelper边缘相对父控件（即RecyclerView）的距离
+        floatLayoutHelper.setBgColor(Color.GRAY);// 设置背景颜色
+        floatLayoutHelper.setAspectRatio(6);// 设置设置布局内每行布局的宽与高的比
+
+        // floatLayoutHelper特有属性
+//        floatLayoutHelper.setDefaultLocation(0, 0);// 设置布局里Item的初始位置
+
+        BaseDelegateAdapter Adapter_FloatLayout = new BaseDelegateAdapter(this, floatLayoutHelper,R.layout.vlayout_floatlayout_item,1,12) {
+            // 设置需要展示的数据总数,此处设置是1
+            // 为了展示效果,通过重写onBindViewHolder()将布局的第一个数据设置为float
+            @Override
+            public void onBindViewHolder(BaseViewHolder holder, int position) {
+                super.onBindViewHolder(holder, position);
+//                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(500,1000);
+//                holder.itemView.setLayoutParams(layoutParams);
+//                holder.itemView.setBackgroundColor(Color.RED);
+//
+//                if (position == 0) {
+//                    holder.Text.setText("float");
+//                }
+                if (position == 0 ){
+                    int item = GRID_URL[0];
+                    ImageView iv = holder.getView(R.id.iv_float);
+                    Glide.with(getApplicationContext()).load(item).into(iv);
+                    iv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(getApplicationContext(), "item" + position, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+//                    holder.setText(R.id.Item,"这是float滚动的Layout");
+                }
+            }
+        };
+
         // type = 0 banner
-        BaseDelegeteAdapter bannerAdapter = new BaseDelegeteAdapter(this
-                , new LinearLayoutHelper(), R.layout.vlayout_banner, 1) {
+        BaseDelegateAdapter bannerAdapter = new BaseDelegateAdapter(this
+                , new LinearLayoutHelper(), R.layout.vlayout_banner, 1,1) {
             @Override
             public void onBindViewHolder(BaseViewHolder holder, int i) {
                 ArrayList<String> arrayList = new ArrayList<>();
@@ -139,12 +302,33 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // type = 1 分类itemLog
-        GridLayoutHelper gridLayoutHelper = new GridLayoutHelper(5);
+        GridLayoutHelper gridLayoutHelper = new GridLayoutHelper(4);
         gridLayoutHelper.setPadding(0, 16, 0, 0);
         gridLayoutHelper.setVGap(10);
         gridLayoutHelper.setHGap(0);//// 控制子元素之间的水平间距
+        gridLayoutHelper.setSpanCount(4);
+        gridLayoutHelper.setSpanSizeLookup(new GridLayoutHelper.SpanSizeLookup() {
 
-        BaseDelegeteAdapter menuAdapter = new BaseDelegeteAdapter(this, gridLayoutHelper, R.layout.vlayout_menu, 10) {
+            /**
+             *
+             * @param position 是从recyclerView整体组件内的item，开始计算！，比如该用例，前面有个banner（item=1），有个FixLayout（item=1），所以此处所有pos需+2
+             * @return 注意是占位权重！！
+             *  比如是4列。1-4个位置的元素，水平排列占满宽度
+             *
+             */
+            @Override
+            public int getSpanSize(int position) {
+                if (position < 6) {
+                    return 1;
+                } else if (position < 10){
+                    return 2;
+                }else {
+                    return 4;
+                }
+            }
+        });
+
+        BaseDelegateAdapter menuAdapter = new BaseDelegateAdapter(this, gridLayoutHelper, R.layout.vlayout_menu, 10,2) {
             @Override
             public void onBindViewHolder(@NonNull BaseViewHolder holder, final int position) {
                 holder.setText(R.id.tv_menu_title_home, ITEM_NAMES[position] + "");
@@ -159,8 +343,8 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // type = 2 头条跑马灯
-        BaseDelegeteAdapter newsAdapter = new BaseDelegeteAdapter(this, new LinearLayoutHelper(),
-                R.layout.vlayout_news, 1) {
+        BaseDelegateAdapter newsAdapter = new BaseDelegateAdapter(this, new LinearLayoutHelper(),
+                R.layout.vlayout_news, 1,3) {
             @Override
             public void onBindViewHolder(@NonNull BaseViewHolder holder, int i) {
                 MarqueeView marqueeView1 = holder.getView(R.id.marqueeView1);
@@ -212,16 +396,27 @@ public class MainActivity extends AppCompatActivity {
         };
 
         DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager, false);
-        delegateAdapter.addAdapter(bannerAdapter);
-        delegateAdapter.addAdapter(menuAdapter);
-        delegateAdapter.addAdapter(newsAdapter);
 
-        delegateAdapter.addAdapter(singleAdapter);
+//        delegateAdapter.addAdapter(bannerAdapter);
+//
+//        delegateAdapter.addAdapter(menuAdapter);
+//
+//        delegateAdapter.addAdapter(newsAdapter);
+//
+//        delegateAdapter.addAdapter(singleAdapter);
+
+        adapterLists.add(bannerAdapter);
+        adapterLists.add(menuAdapter);
+        adapterLists.add(newsAdapter);
+        adapterLists.add(scrollFixLayoutAdapter);
+        adapterLists.add(Adapter_FloatLayout);
+        adapterLists.add(singleAdapter);
+        adapterLists.add(stickyAdapter);
         for (int i = 0; i < ITEM_URL.length; i++) {
             final int finalI = i;
             // type = 3
-            BaseDelegeteAdapter titleAdapter = new BaseDelegeteAdapter(this,
-                    new LinearLayoutHelper(), R.layout.vlayout_title, 1) {
+            BaseDelegateAdapter titleAdapter = new BaseDelegateAdapter(this,
+                    new LinearLayoutHelper(), R.layout.vlayout_title, 1,4) {
                 @Override
                 public void onBindViewHolder(BaseViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
@@ -231,8 +426,8 @@ public class MainActivity extends AppCompatActivity {
 
             // type = 4
             GridLayoutHelper gridHelper = new GridLayoutHelper(2);
-            BaseDelegeteAdapter gridAdapter = new BaseDelegeteAdapter(this, gridHelper,
-                    R.layout.vlayout_grid, 4) {
+            BaseDelegateAdapter gridAdapter = new BaseDelegateAdapter(this, gridHelper,
+                    R.layout.vlayout_grid, 4,5) {
 
                 @Override
                 public void onBindViewHolder(@NonNull BaseViewHolder holder, final int position) {
@@ -248,16 +443,19 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             };
-            delegateAdapter.addAdapter(titleAdapter);
-            delegateAdapter.addAdapter(gridAdapter);
+//            delegateAdapter.addAdapter(titleAdapter);
+//            delegateAdapter.addAdapter(gridAdapter);
+            adapterLists.add(titleAdapter);
+            adapterLists.add(gridAdapter);
         }
+//        delegateAdapter.addAdapter(stickyAdapter);
+
+
 
         // 纵列布局
-//        GridLayoutHelper gridHelper2 = new GridLayoutHelper(2);
-//        StaggeredGridLayoutHelper staggeredGridLayoutHelper = new StaggeredGridLayoutHelper(2);
         ColumnLayoutHelper columnLayoutHelper = new ColumnLayoutHelper();
-        BaseDelegeteAdapter columnGridAdapter = new BaseDelegeteAdapter(this, columnLayoutHelper,
-                R.layout.vlayout_grid, 5) {
+        BaseDelegateAdapter columnGridAdapter = new BaseDelegateAdapter(this, columnLayoutHelper,
+                R.layout.vlayout_grid, 5,6) {
 
             @Override
             public void onBindViewHolder(@NonNull BaseViewHolder holder, final int position) {
@@ -273,14 +471,17 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         };
-        delegateAdapter.addAdapter(columnGridAdapter);
-
+//        delegateAdapter.addAdapter(columnGridAdapter);
+        adapterLists.add(columnGridAdapter);
         // 一拖N布局
         // itemCount：为右半边展示item数量
-        // 注意：一拖N布局，展示的内容，只有 1 + itemCount 个。数量超出部分被丢弃
-        OnePlusNLayoutHelper onePlusNLayoutHelper = new OnePlusNLayoutHelper(3);
-        BaseDelegeteAdapter onePlusNAdapter = new BaseDelegeteAdapter(this, onePlusNLayoutHelper,
-                R.layout.vlayout_grid, 5) {
+        // 注意：一拖N布局，展示的内容，以实际传入的count为准，构造方法OnePlusNLayoutHelper（itemCount无效）
+        // count只能大于1小于等于5！6和7虽然不会报错。但是无法显示。大于7直接报错
+        // ps:要注意的是setItemCount()方法设置的Item数量如果与Adapter的getItemCount()方法返回的数量不同，会取决于后者。
+        // setDividerHeight()设置的间隔会与RecyclerView的addItemDecoration（）添加的间隔叠加.
+        OnePlusNLayoutHelper onePlusNLayoutHelper = new OnePlusNLayoutHelper(4);
+        BaseDelegateAdapter onePlusNAdapter = new BaseDelegateAdapter(this, onePlusNLayoutHelper,
+                R.layout.vlayout_grid, 5,7) {
 
             @Override
             public void onBindViewHolder(@NonNull BaseViewHolder holder, final int position) {
@@ -296,12 +497,54 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         };
-        delegateAdapter.addAdapter(onePlusNAdapter);
+//        delegateAdapter.addAdapter(onePlusNAdapter);
+        adapterLists.add(onePlusNAdapter);
+
+        // FloatLayoutHelper 以window为布局参数的滑动小窗口
+        // StickyLayoutHelper 吸附效果
 
 
-//        // FixLayout
-//        FixLayoutHelper fixLayoutHelper = new FixLayoutHelper(200,500);
-//        BaseDelegeteAdapter fixAdapter = new BaseDelegeteAdapter(this, fixLayoutHelper,
+//         FixLayout
+        FixLayoutHelper fixLayoutHelper = new FixLayoutHelper(FixLayoutHelper.BOTTOM_LEFT,30,50);
+        BaseDelegateAdapter fixAdapter = new BaseDelegateAdapter(this, fixLayoutHelper,
+                R.layout.vlayout_fixlayout_item, 1,8) {
+
+            @Override
+            public void onBindViewHolder(@NonNull BaseViewHolder holder, final int position) {
+//                int item = GRID_URL[position % 4];
+                if (position == 0 ){
+
+                    int item = GRID_URL[0];
+                    ImageView iv = holder.getView(R.id.Image);
+                    Glide.with(getApplicationContext()).load(item).into(iv);
+
+                    iv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(getApplicationContext(), "item" + position, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    holder.setText(R.id.Item,"这是fix固定不动的Layout");
+                }
+            }
+        };
+//        delegateAdapter.addAdapter(fixAdapter);
+        adapterLists.add(1,fixAdapter);
+//         ScrollFixLayout
+        //ScrollFixLayoutHelper——固定布局
+        //
+        //　　这个也是固定布局，而且使继承自FixLayoutHelper的，特性都继承了上面的，比上面多出来的功能就是可以通过设置showType来决定这个布局的Item是否显示，可以用来做一些返回顶部之类的按钮：
+        //- SHOW_ALWAYS：与FixLayoutHelper的行为一致，固定在某个位置；
+        //- SHOW_ON_ENTER：默认不显示视图，当页面滚动到这个视图的位置的时候，才显示；
+        //- SHOW_ON_LEAVE：默认不显示视图，当页面滚出这个视图的位置的时候显示；
+//        ScrollFixLayoutHelper scrollFixLayoutHelper = new ScrollFixLayoutHelper(200, 500);
+
+        //设置固定布局
+//        ScrollFixLayoutHelper scrollFixLayoutHelper = new ScrollFixLayoutHelper(ScrollFixLayoutHelper.TOP_RIGHT,0,0);
+//        scrollFixLayoutHelper.setShowType(ScrollFixLayoutHelper.SHOW_ON_ENTER);
+
+//        BaseDelegateAdapter scrollFixAdapter = new BaseDelegateAdapter(this, scrollFixLayoutHelper,
 //                R.layout.vlayout_grid, 5) {
 //
 //            @Override
@@ -318,30 +561,32 @@ public class MainActivity extends AppCompatActivity {
 //                });
 //            }
 //        };
-//        delegateAdapter.addAdapter(fixAdapter);
+//        delegateAdapter.addAdapter(scrollFixAdapter);
 
-        // ScrollFixLayout
-        ScrollFixLayoutHelper scrollFixLayoutHelper = new ScrollFixLayoutHelper(200, 500);
-        BaseDelegeteAdapter scrollFixAdapter = new BaseDelegeteAdapter(this, scrollFixLayoutHelper,
-                R.layout.vlayout_grid, 5) {
-
+        //StaggeredGrid 瀑布流布局  lanes：表示是3列
+        StaggeredGridLayoutHelper staggeredGridLayoutHelper = new StaggeredGridLayoutHelper(3);
+        BaseDelegateAdapter staggeredGridAdapter = new BaseDelegateAdapter(this, staggeredGridLayoutHelper, R.layout.vlayout_menu, 20,9) {
             @Override
-            public void onBindViewHolder(@NonNull BaseViewHolder holder, final int position) {
-                int item = GRID_URL[position % 4];
-                ImageView iv = holder.getView(R.id.iv);
-                Glide.with(getApplicationContext()).load(item).into(iv);
+            public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
 
-                iv.setOnClickListener(new View.OnClickListener() {
+                ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
+                layoutParams.height = 260 + position % 7 * 20;
+                holder.itemView.setLayoutParams(layoutParams);
+
+                holder.setText(R.id.tv_menu_title_home, ITEM_NAMES[position % 9] + "");
+                holder.setImageResource(R.id.iv_menu_home, IMG_URLS[position % 9]);
+                holder.getView(R.id.ll_menu_home).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getApplicationContext(), "item" + position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), ITEM_NAMES[position % 9] + " -- " + position, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         };
-        delegateAdapter.addAdapter(scrollFixAdapter);
 
+        adapterLists.add(staggeredGridAdapter);
 
+        delegateAdapter.addAdapters(adapterLists);
         mRecyclerView.setAdapter(delegateAdapter);
     }
 
