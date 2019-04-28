@@ -1,12 +1,20 @@
 package com.chinafocus.myui.widget.taobao;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
+import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixLayoutHelper;
@@ -27,6 +36,7 @@ import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
 import com.bumptech.glide.Glide;
 import com.chinafocus.myui.R;
+import com.chinafocus.myui.widget.taobao.behavior.AppBarStateChangeListener;
 import com.sunfusheng.marqueeview.MarqueeView;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -49,13 +59,160 @@ public class MainActivity extends AppCompatActivity {
     //    高颜值商品位
     int[] ITEM_URL = {R.mipmap.item1, R.mipmap.item2, R.mipmap.item3, R.mipmap.item4, R.mipmap.item5};
     int[] GRID_URL = {R.mipmap.flashsale1, R.mipmap.flashsale2, R.mipmap.flashsale3, R.mipmap.flashsale4};
+    private DrawerLayout mDrawerLayout;
+    private ImageView mIvSlideRight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        StatusBarCompat.setStatusBarColor(this,Color.TRANSPARENT,true);
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            Window window = getWindow();
+//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+//                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+////            window.getDecorView().setSystemUiVisibility(
+////                      View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+////                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+////                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+////                    | View.SYSTEM_UI_FLAG_IMMERSIVE
+////                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+////                    | View.SYSTEM_UI_FLAG_FULLSCREEN);
+//
+//
+//            window.getDecorView().setSystemUiVisibility(
+//                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//            |View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.setStatusBarColor(Color.TRANSPARENT);
+//        }
+
+
         setContentView(R.layout.activity_taobao);
+//        setContentView(new MyArrowView(this));
         initView();
+
+        initAppBar();
+
+        initDrawLayout();
+
 //        initTime();
+
+//        ImageView imageView = findViewById(R.id.iv_home);
+//
+//        TranslateAnimation translateAnimation =
+//                new TranslateAnimation(TranslateAnimation.RELATIVE_TO_PARENT,0,
+//                                       TranslateAnimation.RELATIVE_TO_PARENT,0,
+//                                        TranslateAnimation.RELATIVE_TO_SELF,0,
+//                                        TranslateAnimation.RELATIVE_TO_SELF,1);
+//        translateAnimation.setDuration(500);
+////        translateAnimation.setFillEnabled(true);
+//        translateAnimation.setFillBefore(true);
+////        translateAnimation.setFillAfter(true);
+////        translateAnimation.setRepeatMode(TranslateAnimation.REVERSE);
+//        translateAnimation.setRepeatCount(1);
+//        imageView.startAnimation(translateAnimation);
+//        RecyclerView recyclerView = new RecyclerView(this);
+//        recyclerView.canScrollVertically(0);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void initDrawLayout() {
+        mDrawerLayout = findViewById(R.id.dl_home);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        mIvSlideRight = findViewById(R.id.iv_slide_right);
+
+//        mDrawerLayout.setScrimColor(Color.RED);
+//        mDrawerLayout.setStatusBarBackgroundColor(Color.BLUE);
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
+//            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
+//            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+//                //将侧边栏顶部延伸至status bar
+//                mDrawerLayout.setFitsSystemWindows(true);
+//                //将主页面顶部延伸至status bar;虽默认为false,但经测试,DrawerLayout需显示设置
+//                mDrawerLayout.setClipToPadding(false);
+//            }
+//        }
+
+
+        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View view, float v) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View view) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View view) {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int i) {
+
+            }
+        });
+
+
+        mIvSlideRight.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+//                        switch (event.getAction()){
+////                            case MotionEvent.ACTION_DOWN:
+//////                                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+////                                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+//////                                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED);
+////                                break;
+//                            case MotionEvent.ACTION_CANCEL:
+//                            case MotionEvent.ACTION_UP:
+//                                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                                break;
+//                        }
+
+                return true;
+            }
+        });
+    }
+    //按物理返回键的时候，收缩侧边栏
+    @Override
+    public void onBackPressed() {
+        if(mDrawerLayout.isDrawerOpen(GravityCompat.END)){
+            mDrawerLayout.closeDrawer(GravityCompat.END);
+        }else {
+            super.onBackPressed();
+        }
+    }
+
+    private void initAppBar() {
+
+        AppBarLayout appBarLayout = findViewById(R.id.appbar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, State state) {
+                if( state == State.EXPANDED ) {
+
+                    //展开状态
+                    Log.e("AppBarLayout","展开状态");
+
+                }else if(state == State.COLLAPSED){
+
+                    //折叠状态
+                    Log.e("AppBarLayout","折叠状态");
+                }else {
+
+                    //中间状态
+                    Log.e("AppBarLayout","中间状态");
+                }
+            }
+        });
     }
 
     private void initTime() {
@@ -88,6 +245,8 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler);
         VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(this);
         mRecyclerView.setLayoutManager(virtualLayoutManager);
+
+
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
         mRecyclerView.setRecycledViewPool(viewPool);
         viewPool.setMaxRecycledViews(0, 10);
@@ -131,6 +290,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             Toast.makeText(getApplicationContext(), "item" + position, Toast.LENGTH_SHORT).show();
+
+                            startActivity(new Intent(MainActivity.this,SecondActivity.class));
                         }
                     });
                 }
@@ -278,11 +439,11 @@ public class MainActivity extends AppCompatActivity {
                 //设置图片集合
                 mBanner.setImages(arrayList);
                 //设置banner动画效果
-                mBanner.setBannerAnimation(Transformer.DepthPage);
+                mBanner.setBannerAnimation(Transformer.Stack);
                 //设置标题集合（当banner样式有显示title时）
                 //        mBanner.setBannerTitles(titles);
                 //设置自动轮播，默认为true
-                mBanner.isAutoPlay(true);
+                mBanner.isAutoPlay(false);
                 //设置轮播时间
                 mBanner.setDelayTime(3000);
                 //设置指示器位置（当banner模式中有指示器时）
@@ -294,6 +455,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void OnBannerClick(int position) {
                         Toast.makeText(getApplicationContext(), "banner点击了" + position, Toast.LENGTH_SHORT).show();
+
+
+                        mDrawerLayout.openDrawer(GravityCompat.END);
+                        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     }
                 });
 
@@ -590,64 +755,64 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(delegateAdapter);
     }
 
-//    class BannerAdapter   extends DelegateAdapter.Adapter<BaseViewHolder>{
-//
-//
-//        private Context mContext;
-//
-//        public BannerAdapter(Context context) {
-//            mContext = context;
-//        }
-//        @Override
-//        public LayoutHelper onCreateLayoutHelper() {
-//            return new LinearLayoutHelper();
-//        }
-//
-//        @NonNull
-//        @Override
-//        public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-//            return  new BaseViewHolder(LayoutInflater.from(mContext).inflate( R.layout.vlayout_banner, viewGroup, false));
-//        }
-//
-//        @Override
-//        public void onBindViewHolder(@NonNull BaseViewHolder baseViewHolder, int i) {
-//            ArrayList<String> arrayList = new ArrayList<>();
-//            arrayList.add("http://dn.dengpaoedu.com/examples/glide/1.jpg");
-//            arrayList.add("http://dn.dengpaoedu.com/examples/glide/2.jpg");
-//            arrayList.add("http://dn.dengpaoedu.com/examples/glide/3.jpg");
-//            arrayList.add("http://dn.dengpaoedu.com/examples/glide/4.jpg");
-//            arrayList.add("http://dn.dengpaoedu.com/examples/glide/5.jpg");
-//            arrayList.add("http://dn.dengpaoedu.com/examples/glide/6.jpg");
-//            // 绑定数据
-//            Banner mBanner = baseViewHolder.getView(R.id.banner);
-//            //设置banner样式
-//            mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
-//            //设置图片集合
-//            mBanner.setImages(arrayList);
-//            //设置banner动画效果
-//            mBanner.setBannerAnimation(Transformer.DepthPage);
-//            //设置标题集合（当banner样式有显示title时）
-//            //        mBanner.setBannerTitles(titles);
-//            //设置自动轮播，默认为true
-//            mBanner.isAutoPlay(true);
-//            mBanner.setImageLoader(new GlideImageLoader());
-//            //设置轮播时间
-//            mBanner.setDelayTime(3000);
-//            //设置指示器位置（当banner模式中有指示器时）
-//            mBanner.setIndicatorGravity(BannerConfig.CENTER);
-//            //banner设置方法全部调用完毕时最后调用
-//            mBanner.start();
-//
-//            mBanner.setOnBannerListener(new OnBannerListener() {
-//                @Override
-//                public void OnBannerClick(int position) {
-//                    Toast.makeText(getApplicationContext(), "banner点击了" + position, Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//        @Override
-//        public int getItemCount() {
-//            return 1;
-//        }
-//    }
+    class BannerAdapter   extends DelegateAdapter.Adapter<BaseViewHolder>{
+
+
+        private Context mContext;
+
+        public BannerAdapter(Context context) {
+            mContext = context;
+        }
+        @Override
+        public LayoutHelper onCreateLayoutHelper() {
+            return new LinearLayoutHelper();
+        }
+
+        @NonNull
+        @Override
+        public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            return  new BaseViewHolder(LayoutInflater.from(mContext).inflate( R.layout.vlayout_banner, viewGroup, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull BaseViewHolder baseViewHolder, int i) {
+            ArrayList<String> arrayList = new ArrayList<>();
+            arrayList.add("http://dn.dengpaoedu.com/examples/glide/1.jpg");
+            arrayList.add("http://dn.dengpaoedu.com/examples/glide/2.jpg");
+            arrayList.add("http://dn.dengpaoedu.com/examples/glide/3.jpg");
+            arrayList.add("http://dn.dengpaoedu.com/examples/glide/4.jpg");
+            arrayList.add("http://dn.dengpaoedu.com/examples/glide/5.jpg");
+            arrayList.add("http://dn.dengpaoedu.com/examples/glide/6.jpg");
+            // 绑定数据
+            Banner mBanner = baseViewHolder.getView(R.id.banner);
+            //设置banner样式
+            mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+            //设置图片集合
+            mBanner.setImages(arrayList);
+            //设置banner动画效果
+            mBanner.setBannerAnimation(Transformer.DepthPage);
+            //设置标题集合（当banner样式有显示title时）
+            //        mBanner.setBannerTitles(titles);
+            //设置自动轮播，默认为true
+            mBanner.isAutoPlay(true);
+            mBanner.setImageLoader(new GlideImageLoader());
+            //设置轮播时间
+            mBanner.setDelayTime(3000);
+            //设置指示器位置（当banner模式中有指示器时）
+            mBanner.setIndicatorGravity(BannerConfig.CENTER);
+            //banner设置方法全部调用完毕时最后调用
+            mBanner.start();
+
+            mBanner.setOnBannerListener(new OnBannerListener() {
+                @Override
+                public void OnBannerClick(int position) {
+                    Toast.makeText(getApplicationContext(), "banner点击了" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        @Override
+        public int getItemCount() {
+            return 1;
+        }
+    }
 }

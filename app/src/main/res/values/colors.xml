@@ -7,6 +7,11 @@
     <color name="colorWhiteBg">#ffffff</color>
     <color name="colorGrayBg">#f4f4f4</color>
 
+    <!--状态栏顔色-->
+    <color name="bookshelf_status_bar">#000000</color>
+    
+    <color name="colorTransparent">#00000000</color>
+
     <drawable name="red">#7f00</drawable>
     <drawable name="blue">#770000ff</drawable>
     <drawable name="green">#7700ff00</drawable>

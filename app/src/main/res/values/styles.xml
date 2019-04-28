@@ -6,6 +6,40 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+    
+    <style name="MyTranslucentStatus" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+
+        <item name="android:windowBackground">@color/colorWhiteBg</item>
+    </style>
+
+    <style name="SecondActivity" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
+
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <!--<item name="android:windowBackground">@color/colorWhiteBg</item>-->
+    </style>
+    
+    <style name="AnimationActivity" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/push_top_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/push_bottom_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/push_top_out</item>
     </style>
 
 </resources>
