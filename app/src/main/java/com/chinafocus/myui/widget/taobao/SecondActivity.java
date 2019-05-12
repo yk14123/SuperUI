@@ -1,5 +1,6 @@
 package com.chinafocus.myui.widget.taobao;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chinafocus.myui.R;
@@ -36,7 +38,6 @@ public class SecondActivity extends AppCompatActivity {
 //                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 //                    | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-
             window.getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     |View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -50,5 +51,14 @@ public class SecondActivity extends AppCompatActivity {
         TextView textView = new TextView(this);
         textView.setText("aaaaaaaa");
         setContentView(R.layout.activity_taobao_second);
+
+
+        ImageView imageView = findViewById(R.id.iv_first_taobao);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SecondActivity.this,ThirdActivity.class));
+            }
+        });
     }
 }
