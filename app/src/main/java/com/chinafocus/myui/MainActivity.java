@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         // 需在setContentView之前调用
 //        DensityUtils.setDensity(getApplication(),this);

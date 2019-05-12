@@ -9,8 +9,30 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // 5.0以下 把svg图片变成，指定维度的png图片
+//        vectorDrawables.generatedDensities('xhdpi')
+        // 5.0以上 处理方式
+//        vectorDrawables.useSupportLibrary = true
+
+        // 只保留指定string资源文件,包含默认的英文
+        resConfig('zh-rCN')
+
+        // 只保留armeabi的ndk文件 但是如果是pda开发版本是4.4，5.1或者6.0.要把所有ndk打进去
+        ndk{
+            abiFilters('armeabi')
+        }
     }
     buildTypes {
+
+        debug {
+            //开启无用资源压缩
+            shrinkResources true
+            //源代码开启混淆
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -20,6 +42,14 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+
+    //将so库打包到apk
+    sourceSets {
+        main{
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
 }
 
 dependencies {
@@ -31,14 +61,14 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     //    implementation 'com.zhy:percent-support-extends:1.1.1'
     implementation 'com.android.support:design:28.0.0'
-
     implementation 'com.android.support:support-v4:28.0.0'
-
     implementation 'com.alibaba.android:vlayout:1.2.8'
     //banner 轮播图
     implementation 'com.youth.banner:banner:1.4.10'
-//    marqueeview 跑马灯
+    //    marqueeview 跑马灯
     implementation 'com.sunfusheng:marqueeview:1.3.1'
-//
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    //
+//        implementation 'com.github.bumptech.glide:glide:4.7.1'
+        implementation 'jp.wasabeef:glide-transformations:4+'
+//    implementation 'jp.wasabeef:glide-transformations:3.1.1'
 }

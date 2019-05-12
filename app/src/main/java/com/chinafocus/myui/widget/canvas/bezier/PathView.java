@@ -85,6 +85,7 @@ public class PathView extends View {
 //        mPath.rCubicTo(200, -400, 300, 700, 500, 0);
 
 
+
         canvas.drawPath(mPath, mPaint);
     }
 }
